@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from datetime import datetime
+import pifacecad_emulator
 import sys
 import subprocess
 import os
@@ -58,20 +59,15 @@ def calc_work_time(start,ende):
     return calc_time
 
 def kommen(event):
+    global cum_dt
+    cum_dt=datetime.utcnow()
+    global kommen_flag
+    kommen_flag=True
+    global kommen_counter
+    kommen_counter+=1
     event.chip.lcd.clear()
-    event.chip.lcd.set_cursor(0,0)    
-    if kommen_flag:        
-        global cum_dt
-        cum_dt=datetime.utcnow()
-        global kommen_flag
-        kommen_flag=True
-        global kommen_counter
-        kommen_counter+=1
-        event.chip.lcd.write('-----Kommen-----')
-    else:
-        event.chip.lcd.write('Bereits')
-        event.chip.lcd.set_cursor(0,1)
-        event.chip.lcd.write('eingestempelt!')
+    event.chip.lcd.set_cursor(0,0)
+    event.chip.lcd.write('-----Kommen-----')
 def gehen(event):
     global go_dt
     global cum_dt
@@ -108,18 +104,17 @@ def calc(event):
 def clearit(event):
     event.chip.lcd.clear()
 
-cad = pifacecad.PiFaceCAD()
+cad = pifacecad_emulator.PiFaceCAD()
 cad.lcd.clear()
 cad.lcd.write('Willkommen zur')
 cad.lcd.set_cursor(0,1)
 cad.lcd.write('Zeiterfassung!')
-cad.lcd.store_custom_bitmap(temp_symbol_index, temperature_symbol)
-cad.lcd.store_custom_bitmap(memory_symbol_index, memory_symbol)
+#cad.lcd.store_custom_bitmap(temp_symbol_index, temperature_symbol)
+#cad.lcd.store_custom_bitmap(memory_symbol_index, memory_symbol)
 listener = pifacecad.SwitchEventListener(chip=cad)
 listener.register(0, pifacecad.IODIR_FALLING_EDGE, kommen)
 listener.register(1, pifacecad.IODIR_FALLING_EDGE, calc)
-listener.register(2, pifacecad.IODIR_FALLING_EDGE, show_sysinfo)
-listener.register(3, pifacecad.IODIR_FALLING_EDGE, clearit)
-listener.register(4, pifacecad.IODIR_FALLING_EDGE, gehen)
-
+listener.register(2, pifacecad.IODIR_FALLING_EDGE, gehen)
+listener.register(3, pifacecad.IODIR_FALLING_EDGE, show_sysinfo)
+listener.register(4, pifacecad.IODIR_FALLING_EDGE, clearit)
 listener.activate()
