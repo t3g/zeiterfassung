@@ -1,0 +1,3 @@
+/usr/share/doc/python3-pifacecad/examples/sysinfo.py
+sudo nano /etc/profile
+python3 /home/pi/zeiterfassung.py
