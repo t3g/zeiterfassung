@@ -61,7 +61,7 @@ def kommen(event):
     event.chip.lcd.clear()
     event.chip.lcd.set_cursor(0,0)    
     global kommen_flag
-    if kommen_flag:        
+    if not kommen_flag:        
         global cum_dt
         cum_dt=datetime.utcnow()
         kommen_flag=True
