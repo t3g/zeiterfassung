@@ -60,10 +60,10 @@ def calc_work_time(start,ende):
 def kommen(event):
     event.chip.lcd.clear()
     event.chip.lcd.set_cursor(0,0)    
+    global kommen_flag
     if kommen_flag:        
         global cum_dt
         cum_dt=datetime.utcnow()
-        global kommen_flag
         kommen_flag=True
         global kommen_counter
         kommen_counter+=1
